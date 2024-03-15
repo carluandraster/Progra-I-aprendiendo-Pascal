@@ -1,5 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<CONFIG>
-  <Compiler Value="/usr/bin/fpc" Date="1680204690"/>
-  <Params Value=" -MObjFPC -Scghi -Cg -O1 -gw2 -godwarfsets -gl -l -vewnhibq &quot;-Fi/home/usuario/Documentos/Andrés/Ejercicio 1/Inciso b/lib/x86_64-linux&quot; &quot;-Fu/home/usuario/Documentos/Andrés/Ejercicio 1/Inciso b/&quot; &quot;-FU/home/usuario/Documentos/Andrés/Ejercicio 1/Inciso b/lib/x86_64-linux/&quot; &quot;-FE/home/usuario/Documentos/Andrés/Ejercicio 1/Inciso b/&quot; &quot;-o/home/usuario/Documentos/Andrés/Ejercicio 1/Inciso b/ejercicio1b&quot; ejercicio1b.lpr"/>
-</CONFIG>
