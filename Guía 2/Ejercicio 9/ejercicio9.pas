@@ -34,18 +34,18 @@ begin
         readLn(faltas);
 
     // Inicializar variables
-        comision:=1.05;
+        comision:=0.05;
         extra:=0;
         descuentoTotal:=1;
 
     // si superó en ventas un monto X se le agrega un 3%
         if ventas>X then
-            comision:=comision*1.03;
+            comision:=comision+0.03;
 
     // Por presentismo cobra $1000 más ó 2% de las ventas, lo que resulte mayor
         if faltas=0 then
             if 2/100*ventas>1000 then
-                comision:=comision*1.02
+                comision:=comision+0.02
             else
                 extra:=1000
         else
@@ -54,5 +54,7 @@ begin
                 descuentoTotal:=0.93;
 
     // Informar lo que debe cobrar el vendedor
-        sueldoNeto:=
+        sueldoNeto:=descuentoTotal*(sueldoBasico+ventas*comision+extra);
+
+        writeln('El vendedor debe cobrar $',sueldoNeto:8:2);
 end.
