@@ -70,7 +70,10 @@ begin
             
             // Registrar nombre del empleado que más cobra (inciso b)
                 if sueldo>sueldoMaximo then
-                    empleadoQueMasCobra:=nombre;
+                    begin
+                        sueldoMaximo:=sueldo;
+                        empleadoQueMasCobra:=nombre;
+                    end;
           end;
     
     // Salida de datos
@@ -79,5 +82,5 @@ begin
         
         // Inciso c
             promedio:=acumulador/N;
-            writeLn('El sueldo promedio es de $',promedio);
+            writeLn('El sueldo promedio es de $',promedio:8:2);
 end.
