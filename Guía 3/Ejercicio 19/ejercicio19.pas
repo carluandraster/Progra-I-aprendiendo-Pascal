@@ -7,11 +7,12 @@ Program ejercicio19;
 var
     max,num:integer;
     archivo:text;
-    mostrarMaximo:boolean;
+    i:byte;
 
 begin
     // Inicializar variables
-        mostrarMaximo:=false;
+        i:=1;
+        max:=-32768;
 
     // Archivo txt
         assign(archivo,'numeros.txt');
@@ -20,21 +21,19 @@ begin
     // Leer archivo
         while not eof(archivo) do
             begin
-                max:=-1;
-                num:=0;
-                
-                read(archivo,num);
-                if num<0 then
-                    mostrarMaximo:=true;
-                
-                while num>=0 do
+               read(archivo,num);
+               if num>max then
+                 max:=num;
+               if num<0 then {Si hay un numero negativo, hacer un corte}
                     begin
-                      read(archivo,num);
-                      if num>max then
-                        max:=num;
+                        if (i<>1) and (max>=0) then {Si es el primer numero negativo, hacemos una salvedad y no mostramos max}
+                            writeLn(max);
+                        // Reiniciar variables
+                        max:=-32768;
+                        i:=i+1;
                     end;
-
-                if not eof(archivo)
-                    writeLn(max);
             end;
+    
+    // Cerrar archivo
+        close(archivo);
 end.
