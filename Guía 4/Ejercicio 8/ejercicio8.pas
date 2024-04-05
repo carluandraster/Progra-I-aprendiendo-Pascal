@@ -20,7 +20,7 @@ devuelva el correspondiente descuento. }
 
 Function Descuento(tipo:char;dia:byte;monto:real):   real;
 Begin
-    If (dia=10) Or (dia=20) Or (dia=30) And (tipo='O') And (monto>300) Then
+    If ((dia=10) Or (dia=20) Or (dia=30)) And (tipo='O') And (monto>300) Then
         Descuento := 0.05
     Else
         If (tipo='C') And (dia>=15) Then
@@ -32,39 +32,12 @@ Begin
         Descuento := 0;
 End;
 
-Procedure cortar(cadena:string;var tipo:char; var dia:byte; var monto:real);
-    var
-        i:byte;
-        diaStr:string;
-    begin
-        // Extraer tipo de rubro
-            tipo:=cadena[1];
-            delete(cadena,1,2);
-        
-        if tipo<>'F' then
-          begin
-            // Extraer dia
-                i:=1;
-                diaStr:='';
-                while cadena[i]<>' ' do
-                    begin
-                        diaStr:=diaStr+cadena[i];
-                        i:=i+1;
-                    end;
-                delete(cadena,1,i);
-                val(diaStr,dia);
-            // Extraer monto
-                val(cadena,monto);
-          end;
-        
-    end;
-
 Var 
     tipo:   char;
     dia:   byte;
     monto,totalAbonado,ahorro,desc:   real;
     archivo:   text;
-    descuentoTresRubros,lectura,codigo:   string;
+    descuentoTresRubros,codigo:   string;
     cuentaClientes:   word;
 
 Begin
@@ -82,14 +55,14 @@ Begin
     While Not eof(archivo) Do
         Begin
             // Leer codigo de cliente
-            readLn(archivo,codigo);
+                readLn(archivo,codigo);
 
             // Leer compras
-            readLn(archivo,lectura);
-            cortar(lectura,tipo,dia,monto);
-            While tipo<>'F' Do
-                Begin
-                    // Procesar compra
+                read(archivo,tipo);
+                While tipo<>'F' Do
+                    Begin
+                        readLn(archivo,dia,monto);
+                        // Procesar compra
                         totalAbonado := totalAbonado+monto;
                         desc:=Descuento(tipo,dia,monto);
                         ahorro := ahorro+monto*desc;
@@ -101,15 +74,15 @@ Begin
                             End;
                     
                     // Siguiente compra
-                        read(archivo,lectura);
-                        cortar(lectura,tipo,dia,monto);
+                    read(archivo,tipo);
                 End;
+            readLn(archivo);
 
             // a) Código del cliente y total abonado, por cada cliente que no se benefició con ningún descuento.
             If ahorro=0 Then
                 Begin
                     writeLn(codigo);
-                    writeLn('Total abonado: $',totalAbonado);
+                    writeLn('Total abonado: $',totalAbonado:0:2);
                 End
             Else
                 // Contar si el cliente obtuvo descuentos en todos los rubros
@@ -117,7 +90,7 @@ Begin
                     cuentaClientes := cuentaClientes+1;
 
             // c) Informar cuánto ahorró cada cliente
-            writeLn('Ahorro: $',ahorro);
+            writeLn('Ahorro: $',ahorro:0:2);
 
             // Reiniciar variables para el próximo cliente
             totalAbonado := 0;
