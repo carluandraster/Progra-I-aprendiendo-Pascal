@@ -28,32 +28,38 @@ begin
         read(archivo,A[i]);
         i:=i+1;
     end;
+
+    // Cerrar archivo
+    close(archivo);
+
+    // Devolver N
+    N:=i-1;
 end;
 
 // Generar B
 procedure acumulador(A:TV2; N:byte; var B:TV1; var M:byte);
 var
-    i,suma,contaNegativos:byte;
+    i,suma,j:byte;
 begin
     // Inicializar variables
-    contaNegativos:=0;
+    j:=0;
 
     // Recorrer arreglo A
     for i:=1 to N do
     begin
         if A[i]<0 then
         begin
-            if contaNegativos>0 then B[contaNegativos]:=suma;
+            if j>0 then B[j]:=suma;
             // Actualizar variables
-            contaNegativos:=contaNegativos+1;
+            j:=j+1;
             suma:=0;
         end
         else
             // Acumular
-            suma:=suma+A[i];
+            suma:=suma+A[i]; 
     end;
 
-    M:=contaNegativos-1;
+    M:=j-1;
 end;
 
 // Generar C
@@ -92,14 +98,14 @@ end;
 // Programa principal
 
 var
-    A:TV1;
-    B,C:TV2;
+    A:TV2;
+    B,C:TV1;
     N,M:byte;
 
 begin
     leerArchivo(A,N);
     acumulador(A,N,B,M);
-    contador(A,N,B);
+    contador(A,N,C);
 
     // Mostrar resultados
     write('Vector B: ');
