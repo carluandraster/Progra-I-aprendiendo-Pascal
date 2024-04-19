@@ -38,12 +38,12 @@ type
 
 // Subprogramas
 
-procedure leerArchivo (var DNIS: TVstr; var EDADES: TVbyte; var PESOS: TVreal; var i,j,N: byte);
+procedure leerArchivo (var DNIS: TVstr; var ASIENTOS,EDADES: TVbyte; var PESOS: TVreal;
+var N,cantidad: byte);
 var
     archivo:text;
-    edad,contador:byte;
+    i,j,edad,contador:byte;
     codigo,anterior:str4;
-    procedimiento: TProc;
     blanco:char;
     dni:str8;
     peso:real;
@@ -51,14 +51,16 @@ begin
     // Inicializar variables
     i:=0;
     j:=N+1;
-    anterior:='    ';
+    anterior:='';
+    cantidad:=0;
+    contador:=0;
 
     // Reconocer archivo de texto
     assign(archivo,'CHECKIN.txt');
     reset(archivo);
 
     // Leer archivo
-    read(archivo,N);
+    readLn(archivo,N);
     while not eof(archivo) do
     begin
         readLn(archivo,codigo,blanco,dni,edad,peso);
@@ -67,19 +69,19 @@ begin
             contador:=contador+1;
             anterior:=codigo;
         end;
+        cantidad:=cantidad+1;
+        DNIS[cantidad]:=dni;
+        EDADES[cantidad]:=edad;
+        PESOS[cantidad]:=peso;
         if odd(contador) then
         begin
             i:=i+1;
-            DNIS[i]:=dni;
-            EDADES[i]:=edad;
-            PESOS[i]:=peso;
+            ASIENTOS[cantidad]:=i;
         end
         else
         begin
             j:=j-1;
-            DNIS[j]:=dni;
-            EDADES[j]:=edad;
-            PESOS[j]:=peso;
+            ASIENTOS[cantidad]:=j;
         end;
     end;
 
@@ -89,30 +91,25 @@ end;
 
 {a) Dado un DNI, encontrar entre los asientos ocupados cuál es el nro de asiento que se le
 asignó. Si no existe, informar “No realizó el checkin”.}
-function buscar (x:str8;DNIS: TVstr;i,j,N:byte):byte;
+function buscar (x:str8;DNIS: TVstr;ASIENTOS: TVbyte;cantidad:byte):byte;
 var
-    k:byte;
+    i:byte;
 begin
-    k:=1;
-    while (k<=N) and (DNIS[k]<>x) do
-    begin
-        if k=i then
-            k:=j
-        else
-            k:=k+1;
-    end;
+    i:=1;
+    while (i<=cantidad) and (DNIS[i]<>x) do
+        i:=i+1;
         
-    if DNIS[k]<>x then
+    if DNIS[i]<>x then
         buscar:=0
     else
-        buscar:=k;
+        buscar:=ASIENTOS[i];
 end;
 
 {b) Para un rango de pesos P1 y P2, informar el promedio de la edad de los pasajeros cuyo
 equipaje de mano tiene un peso que pertenece al rango dado.}
-function promediarSi (P1,P2:real; EDADES: TVbyte; PESOS: TVreal; i,j,N:byte):real;
+function promediarSi (P1,P2:real; EDADES: TVbyte; PESOS: TVreal; cantidad:byte):real;
 var
-    k,contador:byte;
+    i,contador:byte;
     acumulador:word; {Ya con 3 octogenarios acumulás alrededor de 255 años de edad}
 begin
     // Inicializar variables
@@ -120,17 +117,11 @@ begin
     acumulador:=0;
 
     // Recorrer arreglo de pesos
-    for k:=1 to i do
-        if (P1<PESOS[k]) and (PESOS[k]<P2) then
+    for i:=1 to cantidad do
+        if (P1<PESOS[i]) and (PESOS[i]<P2) then
         begin
             contador:=contador+1;
-            acumulador:=acumulador+EDADES[k];
-        end;
-    for k:=j to N do
-        if (P1<PESOS[k]) and (PESOS[k]<P2) then
-        begin
-            contador:=contador+1;
-            acumulador:=acumulador+EDADES[k];
+            acumulador:=acumulador+EDADES[i];
         end;
     
     // Sacar un promedio y devolverlo como resultado
@@ -141,3 +132,103 @@ begin
 end;
 
 // c) Informar el DNI de los 3 pasajeros que llevan mayor peso de equipaje de mano
+function maximoIn (PESOS:TVreal;cantidad:byte):byte;
+var
+    i:byte;
+    max:real;
+begin
+    max:=-1;
+    for i:=1 to cantidad do
+        if PESOS[i]>max then
+        begin
+            max:=PESOS[i];
+            maximoIn:=i;
+        end;
+end;
+
+procedure eliminarStr (indice:byte; var A:TVstr; var cantidad:byte);
+var
+    i:byte;
+begin
+    for i:=indice to cantidad do
+        A[i]:=A[i+1];
+end;
+
+procedure eliminarReal (indice:byte; var A:TVReal; var cantidad:byte);
+var
+    i:byte;
+begin
+    for i:=indice to cantidad do
+        A[i]:=A[i+1];
+    cantidad:=cantidad-1;
+end;
+
+procedure maximos (DNIS:TVstr; PESOS:TVreal; cantidad:byte);
+var
+    i,j:byte;
+begin
+    for j:=1 to 3 do
+    begin
+        i:= maximoIn(PESOS,cantidad);
+        writeLn(DNIS[i]);
+        eliminarStr(i,DNIS,cantidad);
+        eliminarReal(i,PESOS,cantidad);
+    end;
+end;
+
+// Procedimientos de escritura
+
+procedure incisoA(DNIS:TVstr;ASIENTOS:TVbyte;cantidad:byte);
+var
+    x:str8;
+    busqueda:byte;
+begin
+    writeLn('Ingrese un DNI: ');
+    readLn(x);
+    busqueda:=buscar(x,DNIS,ASIENTOS,cantidad);
+    if busqueda = 0 then
+        writeLn('No realizo el chekin')
+    else
+        writeLn('Se le asigno el asiento ',busqueda);
+end;
+
+procedure incisoB(EDADES: TVbyte; PESOS: TVreal; cantidad:byte);
+var
+    promedio,P1,P2:real;
+begin
+    // Ingreso de datos
+    repeat
+        writeLn('Ingrese un peso minimo: ');
+        readLn(P1);
+    until P1>=0;
+    repeat
+        writeLn('Ingrese un peso maximo: ');
+        readLn(P2);
+    until P2>=0;
+
+    // Procesamiento
+    promedio:=promediarSi (P1,P2,EDADES,PESOS,cantidad);
+
+    // Salida
+    if promedio=-1 then
+        writeLn('Ninguna maleta pesa entre ',P1:3:2,' y ',P2:3:2)
+    else
+        writeLn('Las maletas de entre ',P1:3:2,' y ',P2:3:2,' de peso son de personas de ',promedio:2:0,' anios de edad promedio.');
+end;
+
+// Programa principal
+
+var
+    DNIS: TVstr;
+    ASIENTOS,EDADES: TVbyte;
+    PESOS: TVreal;
+    N,cantidad: byte;
+    
+
+begin
+    leerArchivo(DNIS, ASIENTOS,EDADES, PESOS, N,cantidad);
+    incisoA(DNIS,ASIENTOS,cantidad);
+    incisoB(EDADES, PESOS, cantidad);
+    writeLn('Las 3 personas que llevan mayor peso de maleta son: ');
+    maximos (DNIS, PESOS, cantidad);
+end.
