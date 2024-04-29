@@ -41,14 +41,16 @@ end;
 function maxFila (A:TipoMatriz;i,M:byte):integer;
 var
     j:byte;
+    maximo:integer;
 begin
-    maxFila:=A[i,1];
+    maximo:=A[i,1];
     for j:=2 to M do
-        if A[i,j]>maxFila then
-            maxFila:=A[i,j];
+        if A[i,j]>maximo then
+            maximo:=A[i,j];
+    maxFila:=maximo;
 end;
 
-procedure generarArrMax(A:TipoMatriz; maximos:TV; N,M:byte);
+procedure generarArrMax(A:TipoMatriz; var maximos:TV; N,M:byte);
 var
     i:byte;
 begin
@@ -56,13 +58,14 @@ begin
         maximos[i]:=maxFila(A,i,M);
 end;
 
-procedure mostrar (maximos:TV;N:byte);
+procedure mostrar (maximos:TV;N:byte;texto:string);
 var
     i:byte;
 begin
-    writeLn('Los maximos de cada fila son: ');
+    write(texto);
     for i:=1 to N do
-        write(maximos[i]);
+        write(maximos[i],' ');
+    writeLn();
 end;
 
 {b) Generar un arreglo con la suma de los impares de cada columna, no generar elemento
@@ -73,12 +76,12 @@ var
     i:byte;
 begin
     tieneImpar:=false;
-    sumaImpar:=0;
+    sumImpar:=0;
     for i:=1 to N do
         if odd(A[i,j]) then
         begin
             tieneImpar:=true;
-            sumaImpar:=sumaImpar+A[i,j];
+            sumImpar:=sumImpar+A[i,j];
         end;
 end;
 
@@ -105,4 +108,45 @@ end;
 
 // c) Dada una columna X, ingresada por el usuario, hallar el promedio de sus elementos
 
-function promedio (x:byte)
+function promedio (x,N: byte; A: TipoMatriz): real;
+var
+    i,acumulador: byte;
+begin
+    acumulador:=0;
+    for i:=1 to N do
+        acumulador:=acumulador+A[i,x];
+    promedio:=acumulador/N;
+end;
+
+procedure entradaSalida (A: TipoMatriz; N,M: byte);
+var
+    x:byte;
+begin
+    repeat
+        writeLn('Ingrese el indice de una columna: ');
+        readLn(x);
+    until (x>0) and (x<=M);
+
+    writeLn('Promedio: ',promedio(x,N,A):4:2);
+end;
+
+// Programa principal
+
+var
+    A: TipoMatriz;
+    N,M,K: byte;
+    maximos,SumImp:TV;
+begin
+    cargarMatriz(A,N,M);
+
+    // Inciso a
+    generarArrMax(A,maximos,N,M);
+    mostrar(maximos,N,'Los maximos de cada fila son: ');
+
+    // Inciso b
+    generarArrSumImp (A, N, M, SumImp, K);
+    mostrar(SumImp,K,'Las sumatorias de numeros impares son: ');
+
+    // Inciso c
+    entradaSalida(A,N,M);
+end.
