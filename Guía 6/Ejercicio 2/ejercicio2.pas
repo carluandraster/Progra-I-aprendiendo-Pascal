@@ -33,7 +33,7 @@ begin
     reset(archivo);
 
     // Leer archivo
-    readLn(archivo,K);
+    read(archivo,K);
     while not eof(archivo) do
     begin
         N:=N+1;
@@ -46,6 +46,9 @@ begin
         for i:=1 to K do
             read(archivo,Notas[N,i]);
     end;
+
+    // Cerrar archivo
+    close(archivo);
 end;
 
 // a) Listado de los alumnos que aprobaron los K parciales.
@@ -111,12 +114,36 @@ begin
     T:=0;
     for i:=1 to N do
     begin
-        prom:=promedio(Notas,i,K):
+        prom:=promedio(Notas,i,K);
         if prom >= 7 then
         begin
             writeLn(Nbre[i],' promociona');
+            // y generar un arreglo con los nombres de aquellos que promocionaron.
             T:=T+1;
             promocionados[T]:=Nbre[i];
         end
+        else
+            if (prom>=5) and (Notas[i,K]>=5) then
+                writeLn(Nbre[i],' habilita.')
+            else
+                writeLn(Nbre[i],' desaprueba.');
     end;
 end;
+
+// Programa principal
+
+var
+    Notas: TM; 
+    N,K,M,T: byte; 
+    Nbre,aprobados,promocionados: TVstr;
+
+begin
+    leerArchivo (Notas, N, K, Nbre);
+
+    // Inciso a
+    arregloAprobados (Notas, Nbre, aprobados, N, K, M);
+    imprimir(aprobados,M);
+
+    // Inciso b
+    situaciones(Notas, Nbre, N, K, promocionados, T);
+end.
