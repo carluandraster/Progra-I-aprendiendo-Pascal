@@ -38,7 +38,7 @@ begin
     N:=0;
 
     // Abrir archivo de texto
-    assign(archivo,'cumpleaños.txt');
+    assign(archivo,'cumpleanos.txt');
     reset(archivo);
 
     // Leer archivo
@@ -63,25 +63,25 @@ begin
             3:
                 case dia of
                     1..20: estacion:='V';
-                    else: estacion:='O';
+                    else estacion:='O';
                 end;
             4,5: estacion:='O';
             6:
                 case dia of
                     1..20: estacion:='O';
-                    else: estacion:='I';
+                    else estacion:='I';
                 end;
             7,8: estacion:='I';
             9:
                 case dia of
                     1..20: estacion:='I';
-                    else: estacion:='P';
+                    else estacion:='P';
                 end;
             10,11: estacion:='P';
             12:
                 case dia of
                     1..20: estacion:='P';
-                    else: 'V';
+                    else estacion:='V';
                 end;
         end;
 end;
@@ -113,8 +113,37 @@ end;
 
 function maximo (empleados: TV; N: byte):str9;
 var
-    i,max: byte;
+    i,max,maxI: byte;
     CONTADOR: TV4;
 begin
+    // Inicializar variables
     contar (empleados, N, CONTADOR);
+    max:=0;
+
+    // Recorrer el contador
+    for i:=1 to 4 do
+        if CONTADOR[i]>max then
+        begin
+            max:=CONTADOR[i];
+            maxI:=i;
+        end;
+    
+    // Devolver resultado
+    case maxI of
+        1: maximo:='verano';
+        2: maximo:='otonio';
+        3: maximo:='invierno';
+        4: maximo:='primavera';
+    end;
 end;
+
+// Programa principal
+
+var
+    empleados: TV; 
+    N: byte;
+
+begin
+    leerArchivo(empleados,N);
+    writeLn('La estacion con mas cumpleanios es ',maximo(empleados,N),'.');
+end.
