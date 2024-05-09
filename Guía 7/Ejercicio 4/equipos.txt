@@ -1,0 +1,4 @@
+3
+ClubA 5 G E P G P
+ClubB 4 E P G E
+ClubC 6 G G G G G G
