@@ -31,17 +31,24 @@ begin
 end;
 
 // Sumar toda una fila excepto la diagonal (fila constante)
-function sumarSi (A: TM; fila,N: byte):integer;
+function sumarSi(A: TM; fila, N: byte): integer;
 begin
-    if N>1 then
-        if N=fila then
-            sumarSi:=sumarSi(A,fila,N-1)
+    if N > 1 then
+    begin
+        if N = fila then
+            sumarSi := sumarSi(A, fila, N - 1)  // Llamada recursiva, no cambia la suma
         else
-            sumarSi:=A[fila,N]+sumarSi(A,fila,N-1)
+            sumarSi := A[fila, N] + sumarSi(A, fila, N - 1);  // Suma el elemento no diagonal
+    end
     else
-        if N<>fila then
-            sumarSi:=A[fila,N];
+    begin
+        if N <> fila then
+            sumarSi := A[fila, N]  // Último elemento no diagonal
+        else
+            sumarSi := 0;  // Caso base cuando N=fila, suma = 0
+    end;
 end;
+
 
 // Verifica que se cumpla la condición del problema (N constante)
 function verifica (A: TM;fila,N: byte):boolean;
@@ -51,8 +58,8 @@ begin
             verifica:=true
         else
             verifica:=verifica(A,fila-1,N)
-    else
-        verifica:=false;
+    else  
+        verifica:=false; 
 end;
 
 
