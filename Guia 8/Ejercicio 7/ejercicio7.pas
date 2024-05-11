@@ -8,7 +8,7 @@ const
     tope = 20;
 
 type
-    TM = array [1..tope] of byte;
+    TM = array [1..tope,1..tope] of byte;
 
 
 
@@ -38,18 +38,82 @@ end;
 
 // Buscar minimo elemento de la matriz
 
-function minBorde (matriz: TM; i,j,N: byte): byte;
+function minBordeInf (matriz: TM; j,N: byte): byte;
+var
+    minAux: byte;
 begin
-    if (i=1) and (j=N) then
-        minBorde:=matriz[i,j]
+    if (j=1) then
+        minBordeInf:=matriz[N,1]
     else
-        if matriz[N,1]<minBorde(matriz)
+    begin
+        minAux:=minBordeInf(matriz,j-1,N);
+        if matriz[N,j]<minAux then
+            minBordeInf:=matriz[N,j]
+        else
+            minBordeInf:=minAux;
+    end;
+        
+end;
+
+function minBordeDer (matriz: TM; i,N: byte): byte;
+var
+    minAux: byte;
+begin
+    if (i=1) then
+        minBordeDer:=matriz[1,N]
+    else
+    begin
+        minAux:=minBordeDer(matriz,i-1,N);
+        if matriz[i,N]<minAux then
+            minBordeDer:=matriz[i,N]
+        else
+            minBordeDer:=minAux;
+    end;
+        
+end;
+
+function minBordes (matriz: TM; N: byte): byte;
+var
+    minInf,minDer: byte;
+begin
+    // Inicializar variables
+    minInf:=minBordeInf(matriz,N,N);
+    minDer:=minBordeDer(matriz,N-1,N);
+
+    // Devolver resultado
+    if minInf<minDer then
+        minBordes:=minInf
+    else
+        minBordes:=minDer;
 end;
 
 function minimo (matriz: TM; N: byte): byte;
+var
+    minAux,bordes: byte;
 begin
     if N=1 then
         minimo:=matriz[1,1]
     else
-
+    begin
+        minAux:=minimo(matriz,N-1);
+        bordes:=minBordes(matriz,N);
+        if bordes<minAux then
+            minimo:=bordes
+        else
+            minimo:=minAux;
+    end;
 end;
+
+
+
+// Programa principal
+
+
+var
+    matriz: TM;
+    N: byte;
+
+begin
+    leerArchivo(matriz,N);
+    writeLn('Numero mas bajo de la matriz: ',minimo(matriz,N));
+end.
