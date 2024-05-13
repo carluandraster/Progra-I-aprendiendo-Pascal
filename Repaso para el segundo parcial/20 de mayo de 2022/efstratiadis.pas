@@ -37,33 +37,6 @@ type
 
 // Subprogramas
 
-procedure cargarProvincias (var Provincias: TVprov; var M: byte);
-var
-    archivo: text;
-    blanco: str2;
-begin
-    // Inicializar variable
-    M:=0;
-
-    // Abrir archivo
-    assign(archivo,'PROVINCIAS.TXT');
-    reset(archivo);
-
-    // Leer archivo
-    while not eof(archivo) do
-    begin
-        M:=M+1;
-        with Provincias[M] do
-        begin
-            readLn(archivo,codigo,blanco,nombre);
-            nombre:=trim(nombre);
-        end;
-    end;
-
-    // Cerrar archivo
-    close(archivo);
-end;
-
 // Dado un codigo de provincia, devolver indice
 
 function buscar (x: str2; Provincias: TVprov; M: byte): byte;
@@ -82,7 +55,7 @@ begin
         INSCRIPTOS[i,columna].N:=0;
 end;
 
-procedure cargarInscriptos (var INSCRIP: TM; M: byte; Provincias: TVprov);
+procedure cargarInscriptos (var INSCRIP: TM; var M: byte; var PROVINCIAS: TVprov);
 var
     i,age: byte;
     archivo: text;
@@ -91,8 +64,7 @@ var
     documento: str8;
 begin
     // Inicializar variables
-    for i:=1 to M do
-        InicializarProvincia(INSCRIP, i);
+    M:=0;
     
     // Abrir archivo
     assign(archivo,'INSCRIPTOS.TXT');
@@ -102,7 +74,15 @@ begin
     while not eof(archivo) do
     begin
         readLn(archivo,documento,age,blanco,code);
-        with INSCRIP[age div 10,buscar (code, Provincias, M)] do
+        i:=buscar (code, Provincias, M);
+        if i=0 then
+        begin
+            M:=M+1;
+            i:=M;
+            InicializarProvincia (INSCRIP, i);
+            Provincias[i].codigo:=code;
+        end;
+        with INSCRIP[age div 10,i] do
         begin
             N:=N+1;
             with inscriptos[N] do
@@ -111,6 +91,31 @@ begin
                 edad:=age;
             end;
         end;
+    end;
+
+    // Cerrar archivo
+    close(archivo);
+end;
+
+procedure cargarProvincias (var Provincias: TVprov; M: byte);
+var
+    archivo: text;
+    cod,blanco: str2;
+    nom: str30;
+    i: byte;
+begin
+    // Abrir archivo
+    assign(archivo,'PROVINCIAS.TXT');
+    reset(archivo);
+
+    // Leer archivo
+    while not eof(archivo) do
+    begin
+        readLn(archivo,cod,blanco,nom);
+        nom:=trim(nom);
+        i:=buscar (cod, Provincias, M);
+        if i<>0 then
+            Provincias[i].nombre:=nom;
     end;
 
     // Cerrar archivo
@@ -174,10 +179,10 @@ end;
 
 function totalInscriptos (INSCRIP: TM; i,j,M: byte): byte;
 begin
-    if (j=0) and (i>0) then
+    if (j=0) and (i>1) then
         totalInscriptos:=totalInscriptos(INSCRIP,i-1,M,M)
     else
-        if (j=0) and (i=0) then
+        if (j=0) and (i=1) then
             totalInscriptos:=0
         else
             totalInscriptos:=INSCRIP[i,j].N+totalInscriptos(INSCRIP,i,j-1,M);
@@ -223,8 +228,8 @@ var
 
 begin
     // Ingresar datos por archivo
-    cargarProvincias (Provincias, M);
     cargarInscriptos(INSCRIP, M, Provincias);
+    cargarProvincias (Provincias, M);
 
     // Inciso a
     writeLn('Ingrese un codigo de provincia: ');
