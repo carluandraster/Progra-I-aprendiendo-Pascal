@@ -1,0 +1,30 @@
+01 Buenos Aires
+02 Bahia Blanca
+03 Cordoba
+04 Rosario
+05 Mendoza
+06 La Plata
+07 Mar del Plata
+08 Salta
+09 Tucuman
+10 Corrientes
+11 Santa Fe
+12 Jujuy
+13 San Juan
+14 San Luis
+15 Neuquen
+16 Rio Gallegos
+17 Ushuaia
+18 Bariloche
+19 Trelew
+20 Com. Rivadavia
+21 Posadas
+22 Formosa
+23 Resistencia
+24 Catamarca
+25 Santiago del E
+26 La Rioja
+27 San Fernando
+28 Rio Cuarto
+29 Gualeguaychu
+30 San Nicolas
