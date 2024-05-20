@@ -1,0 +1,13 @@
+89012345 Juan Perez       5000 2000
+87654321 Maria Gomez      6000 3500
+11223344 Carlos Ruiz      7000 4000
+44332211 Ana Lopez        8000 4500
+55667788 Luis Fernandez   9000 5000
+99191011 Patricia Sanchez 10000 6000
+12345678 Ricardo Morales  11000 7000
+23234567 Laura Martinez   12000 8000
+34565678 Jose Torres      13000 9000
+45678901 Sofia Diaz       14000 10000
+56789012 Andres Martinez  81000 49873
+78901234 Matias Plaza     100000 4500
+90123456 Joaquin Lorenzani68975 23416
