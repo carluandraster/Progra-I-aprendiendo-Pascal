@@ -1,0 +1,5 @@
+E01 Paseo a las Sierras 1000 200
+E02 Paseo a la Laguna 800 150
+E03 City Tour 500 100
+E04 Viaje en Barco 1200 300
+E05 Tour Cultural 600 120
