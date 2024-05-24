@@ -24,6 +24,7 @@ const
     tope=100;
 
 type
+    str20 = string[20];
     str17 = string[17];
     str8 = string[8];
     str5 = string[5];
@@ -38,6 +39,7 @@ type
         codigo: str5;
         monto: real;
     end;
+    TA2 = file of TR2;
     TV = array [1..tope] of str8;
 
 
@@ -61,7 +63,7 @@ begin
     // Leer archivo
     while not eof(archivo) do
         begin
-            with registo do
+            with registro do
                 readLn(archivo,tarjeta,blanco,nombre,tope,gasto);
             write(TARJETAS,registro);
         end;
@@ -73,7 +75,7 @@ end;
 
 // Descargar de TARJETAS.DAT los números de tarjeta sobre un arreglo
 
-procedure cargarNumeros (var numTARJETAS: TV; var N: byte; TARJETAS: TA1);
+procedure cargarNumeros (var numTARJETAS: TV; var N: byte; var TARJETAS: TA1);
 var
     registro: TR1;
 begin
@@ -111,23 +113,101 @@ procedure leerCompras(var TARJETAS: TA1; var RECHAZADOS: TA2; numTARJETAS: TV; N
 var
     archivo: text;
     blanco: char;
-    registro: TR2;
+    registro1: TR1; {Nro de tarjeta, nombre, tope y gasto}
+    registro2: TR2; {Numero de tarjeta, monto y codigo de operacion}
     busqueda: byte;
 begin
-    // Abrir archivo de texto
+    // Abrir archivos
     assign(archivo,'./txt/compras.txt');
     reset(archivo);
-
-    // Abrir archivos para escritura
-    rewrite(TARJETAS);
+    reset(TARJETAS);
     rewrite(RECHAZADOS);
-
-    // Leer archivo
+        
+    // Leer archivo compras.txt
     while not eof(archivo) do
-        with registro do
+        with registro2 do
             begin
                 readLn(archivo,tarjeta,monto,blanco,codigo);
                 busqueda:=buscar(tarjeta,numTARJETAS,N);
-                
+                seek(TARJETAS,busqueda-1);
+                read(TARJETAS,registro1);
+                with registro1 do
+                    if gasto+monto>tope then
+                        write(RECHAZADOS,registro2)
+                    else
+                        begin
+                            seek(TARJETAS,busqueda-1);
+                            gasto:=gasto+monto;
+                            write(TARJETAS,registro1);
+                        end;
             end;
+    
+    // Cerrar archivos
+    close(TARJETAS);
+    close(RECHAZADOS);
+    close(archivo);
 end;
+
+// Imprimir gastos del mes
+
+procedure imprimir1(var TARJETAS: TA1);
+var
+    registro: TR1;
+begin
+    reset(TARJETAS);
+
+    writeLn('Nro de tarjeta  Nombre            Tope     Gasto');
+    while not eof(TARJETAS) do
+        begin
+            read(TARJETAS,registro);
+            with registro do
+                writeLn(tarjeta,' ',nombre:24,' $',tope:4:2,' $',gasto:4:2);
+        end;
+    
+    close(TARJETAS);
+end;
+
+// Imprimir operaciones rechazadas
+
+procedure imprimir2(var RECHAZADOS: TA2);
+var
+    registro: TR2;
+begin
+    reset(RECHAZADOS);
+
+    writeLn('Operaciones rechazadas: ');
+    while not eof(RECHAZADOS) do
+        begin
+            read(RECHAZADOS,registro);
+            with registro do
+                writeLn(tarjeta,' $',monto:4:2,' ',codigo);
+        end;
+    
+    close(RECHAZADOS);
+end;
+
+
+// Programa principal
+
+var
+    TARJETAS: TA1;
+    RECHAZADOS: TA2;
+    numTARJETAS: TV;
+    N: byte;
+
+begin
+    // Asignar las variables de tipo archivo
+    assign(TARJETAS,'./dat/TARJETAS.DAT');
+    assign(RECHAZADOS,'./dat/RECHAZADOS.DAT');
+
+    // Inicializar variables
+    CargarTarjetas(TARJETAS);
+    cargarNumeros (numTARJETAS, N, TARJETAS);
+
+    // Resolver
+    leerCompras(TARJETAS, RECHAZADOS, numTARJETAS, N);
+
+    // Imprimir respuestas
+    imprimir1(TARJETAS);
+    imprimir2(RECHAZADOS);
+end.
