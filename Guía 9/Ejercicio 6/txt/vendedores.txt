@@ -1,0 +1,10 @@
+1001 Juan Perez      15000 2345 5000
+1002 Maria Garcia    20000 2346 7000
+1003 Jose Rodriguez  18000 2347 6000
+1004 Ana Lopez       22000 2348 8000
+1005 Luis Martinez   17000 2349 5500
+1006 Laura Fernandez 21000 2350 7500
+1007 Carlos Sanchez  16000 2351 5200
+1008 Sofia Ramirez   19000 2352 6800
+1009 Miguel Torres   23000 2353 9000
+1010 Lucia Morales   14000 2354 4900
