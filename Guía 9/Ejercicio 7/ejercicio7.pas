@@ -98,6 +98,7 @@ procedure cargarVentas (var VENTAS: TAventas);
 var
     archivo: text;
     registro: TRventas;
+    blanco: char;
 begin
     // Abrir archivos
     assign(archivo,'./txt/VENTAS.txt');
@@ -110,7 +111,7 @@ begin
             read(archivo,codCine);
             while codCine<>'ZZZZ' do
                 begin
-                    read(archivo,codPelicula,localidadesVendidas);
+                    read(archivo,blanco,codPelicula,localidadesVendidas);
                     write(VENTAS,registro);
 
                     readLn(archivo);
@@ -176,29 +177,16 @@ begin
         buscar:=buscar(x,N-1,PELICULAS);
 end;
 
-// Programa principal
-
+procedure Enfrentar (var ventasXZona: TV; var PELICULAS:TVpeli; var N: byte);
 var
     CINES: TAcines;
     VENTAS: TAventas;
-    PELICULAS: TVpeli;
+    contaPeliculas, contaFunciones, totalVendidas, cinesSinFuncion: word;
+    i,busqueda: byte;
     regCines: TRcines;
     regVentas: TRventas;
-    ventasXZona: TV;
-    contaPeliculas, contaFunciones, totalVendidas, cinesSinFuncion: word;
-    i,duracion,busqueda,N: byte;
-    VC,minCod: str3;
-    minProm: real;
-    titulo: strTop;
-
+    VC: str3;
 begin
-    // Inicializar variables
-    cinesSinFuncion:=0;
-    for i:=1 to ZONAS do
-        ventasXZona[i]:=0;
-    minProm:=99999999999999999999999999999;
-    N:=0;
-
     // Archivos
 
     assign(CINES,'./dat/CINES.dat');
@@ -208,6 +196,11 @@ begin
     assign(VENTAS,'./dat/VENTAS.dat');
     cargarVentas(VENTAS);
     reset(VENTAS);
+    
+    // Inicializar variables
+    cinesSinFuncion:=0;
+    for i:=1 to ZONAS do
+        ventasXZona[i]:=0;
 
     // Enfrentar archivos
     read(CINES,regCines);
@@ -258,8 +251,18 @@ begin
                     read(CINES,regCines);
                 end;
     writeLn('Cantidad de cines que no proyectaron ninguna pelicula: ',cinesSinFuncion);
+end;
 
-    // Hallar película con menor promedio de localidades vendidas por función
+// Hallar película con menor promedio de localidades vendidas por función
+
+procedure minimo (PELICULAS: TVpeli; N: byte);
+var
+    i,duracion: byte;
+    minCod: str3;
+    minProm: real;
+    titulo: strTop;
+begin
+    minProm:=99999999999999999999999999999;
     for i:=1 to N do
         with PELICULAS[i] do
             if localidadesVendidas/cantidadFunciones<minProm then
@@ -269,6 +272,21 @@ begin
                 end;
     buscarPelicula(minCod, titulo, duracion);
     writeLn('Pelicula con menor promedio de localidades vendidas por funcion: ',titulo,' (',duracion,' min)');
+end;
+    
+
+// Programa principal
+
+var
+    PELICULAS: TVpeli;
+    ventasXZona: TV;
+    i,N: byte;
+
+begin
+    N:=0;
+
+    Enfrentar (ventasXZona, PELICULAS,N);
+    minimo(PELICULAS, N);
 
     writeLn('Total de localidades vendidas por zona');
     for i:=1 to ZONAS do
