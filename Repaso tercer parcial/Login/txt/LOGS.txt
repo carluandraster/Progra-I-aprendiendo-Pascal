@@ -1,0 +1,10 @@
+2024 06 01 usuario1       password123 I
+2024 06 01 usuario4       newpass789 R
+2024 06 01 usuario2       pass456 I
+2024 06 01 usuario2       pass456 C
+2024 06 01 usuario3       qwerty789 I
+2024 06 01 usuario3       qwerty789 C
+2024 06 02 usuario4       newpass789 I
+2024 06 02 usuario4       newpass789 C
+2024 06 02 usuario5       somepass I
+9999 99 99
