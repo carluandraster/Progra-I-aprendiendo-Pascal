@@ -1,0 +1,8 @@
+A0001 Juan Perez          925
+A0001 Fernando Carlo      145
+A0002 Fabian Rodriguez    332
+A0002 Andres Efstratiadis 969
+A0002 Cofla Fernandez     61
+A0003 Maria Canapino      664
+A0003 Pablo Andrada       659
+zzzzz

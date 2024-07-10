@@ -1,0 +1,10 @@
+ID0001 1 Cancion Uno                   S 210
+ID0001 2 Cancion Dos                   N 180
+ID0002 1 Cancion Tres                  S 200
+ID0003 3 Cancion Cuatro                S 230
+ID0003 4 Cancion Cinco                 N 250
+ID0004 5 Cancion Seis                  S 190
+ID0005 2 Cancion Siete                 S 220
+ID0006 1 Cancion Ocho                  N 240
+ID0006 3 Cancion Nueve                 S 260
+ID0007 4 Cancion Diez                  N 270
