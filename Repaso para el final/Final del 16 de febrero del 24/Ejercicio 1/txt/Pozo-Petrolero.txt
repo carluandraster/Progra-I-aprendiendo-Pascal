@@ -1,0 +1,4 @@
+A55 Tupungato                     1200
+B14 Chubut                        3000
+B74 Cacheuta                      1500
+A99 Neuquen                       3000

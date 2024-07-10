@@ -1,0 +1,4 @@
+a) Falso, también puede invocar otros procedimientos ya que todo lo que pueda hacer otro
+procedimiento también lo puede hacer el mismo.
+b) Verdadero porque los procedimientos pueden leer y escribir, las funciones no. Entonces
+invocar un subprograma que lea o escriba es como si la propia función lo hiciera.
