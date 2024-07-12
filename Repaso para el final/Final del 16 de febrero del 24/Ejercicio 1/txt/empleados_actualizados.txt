@@ -1,0 +1,7 @@
+1000 Alberto Ferreyra              16800.00
+1001 Raul Perez                    56400.00
+1002 Andres Efstratiadis           0.00
+1003 Julian Fernandez              21000.00
+1004 Joaquin Cantarella            0.00
+1005 Emanuel Gonzalez              14400.00
+9999
